@@ -1,0 +1,10 @@
+<div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+  <img [src]="'../../../assets/images/logo.png'" [height]="190">
+  <mat-icon class="play-btn">play_circle</mat-icon>
+  <div class="lobby">
+    <span class="title">Players</span>
+    <div fxLayout="row wrap" fxLayoutGap="10px">
+      <span class="player-name" *ngFor="let player of players">{{player}}</span>
+    </div>
+  </div>
+</div>
