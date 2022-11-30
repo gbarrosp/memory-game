@@ -1,10 +1,26 @@
 <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
   <img [src]="'../../../assets/images/logo.png'" [height]="190">
-  <mat-icon class="play-btn">play_circle</mat-icon>
-  <div class="lobby">
-    <span class="title">Players</span>
-    <div fxLayout="row wrap" fxLayoutGap="10px">
-      <span class="player-name" *ngFor="let player of players">{{player}}</span>
+  <div *ngIf="!gameRunning" fxLayout="column" fxLayoutAlign="space-between center">
+    <mat-icon class="play-btn" (click)="roundStart()">play_circle</mat-icon>
+    <div class="lobby">
+      <span class="title">Players</span>
+      <div fxLayout="row wrap" fxLayoutGap="10px">
+        <span class="player-name" *ngFor="let player of players">{{player}}</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="gameRunning">
+    <span *ngIf="displayCountdown" class="countdown">{{countdown}}</span>
+    <span *ngIf="displayAlert" class="title">{{alertMessage}}</span>
+    <app-sequence *ngIf="displaySequence" [size]="sequenceTime" (sequence)="lastSequence($event)"></app-sequence>
+    <div class="lobby" *ngIf="displayResults">
+      <span class="title">Resultado</span>
+      <div fxLayout="row wrap" fxLayoutGap="10px">
+        <div *ngFor="let player of players" fxLayout="row" fxLayoutAlign="start center" [ngClass]="playerPassed(player) ? 'passed' : 'failed'">
+          <span class="player-name" >{{player}}</span>
+          <mat-icon class="result-icon">{{playerPassed(player) ? 'done' : 'close'}}</mat-icon>
+        </div>
+      </div>
     </div>
   </div>
 </div>

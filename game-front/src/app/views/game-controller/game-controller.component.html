@@ -1,1 +1,32 @@
-<p>game-controller works!</p>
+<div *ngIf="showController" class="controller-container" fxLayout="column" fxLayoutAlign="space-between" fxFill>
+  <div fxFlex="25" fxLayout="row">
+    <mat-icon *ngFor="let arrow of sequence" class="arrow">{{arrow}}</mat-icon>
+  </div>
+  <div fxFlex class="controller" fxLayout="column" fxLayoutAlign="center center">
+    <mat-icon (click)="addArrow('arrow_upward')">arrow_upward</mat-icon>
+    <div fxLayout="row" fxLayoutAlign="space-between">
+      <mat-icon (click)="addArrow('arrow_back')">arrow_back</mat-icon>
+      <mat-icon (click)="addArrow('arrow_forward')">arrow_forward</mat-icon>
+    </div>
+    <mat-icon (click)="addArrow('arrow_downward')">arrow_downward</mat-icon>
+  </div>
+  <div fxFlex="25" fxLayout="row" class="actions" fxLayoutAlign="space-between end">
+    <mat-icon (click)="resetArrows()">delete</mat-icon>
+    <mat-icon (click)="removeLast()">backspace</mat-icon>
+  </div>
+</div>
+<div *ngIf="!showController" fxLayout="column" fxLayoutAlign="center center" fxFill>
+  <mat-card *ngIf="!ready">
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline">
+        <mat-label>Player</mat-label>
+        <input matInput [(ngModel)]="player">
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="imReady()">Bora!</button>
+    </div>
+  </mat-card>
+  <div *ngIf="ready" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="50px">
+    <span class="name">{{player}}</span>
+    <mat-spinner></mat-spinner>
+  </div>
+</div>

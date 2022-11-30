@@ -3,17 +3,29 @@ import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
+import json
 
 clients = []
-
 class SocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print('WebSocket opened')
         clients.append(self)
 
     def on_message(self, message):
-        print(f'Received: {message}')
-        self.write_message("Received: " + message)
+        print(f'Received: {json.loads(message)}')
+        sequence = json.loads(message)['message']['sequence']
+        owner = json.loads(message)['message']['owner']
+        if owner == 'board':
+            if len(sequence) == 1:
+                message = {"roundStart": True}
+            elif len(sequence) == 2:
+                message = {"roundEnd": True}
+            else:
+                self.last_sequence = sequence
+                message = {"getSequence": True}
+        else:
+            result = self.last_sequence == sequence
+            message = {"player": owner, "result": result}
         for w in clients:
             w.write_message(message)
 
@@ -26,7 +38,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
 
 def main():
     application = tornado.web.Application([
-    (r'/ws', SocketHandler),
+        (r'/ws', SocketHandler),
     ])
     try:
         http_server = tornado.httpserver.HTTPServer(application)
